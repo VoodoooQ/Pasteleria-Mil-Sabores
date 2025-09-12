@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle de Compra - Pastelería Mil Sabores</title>
+  <link rel="stylesheet" href="estilos.css">
+  <script src="funciones.js"></script>
+</head>
+<body>
+  <nav>
+    <a href="inicio.html">Inicio</a>
+    <a href="catalogo.html">Productos</a>
+    <a href="registro.html">Registro</a>
+    <a href="inicioSesion.html">Iniciar Sesión</a>
+    <a href="nosotros.html">Nosotros</a>
+    <a href="contacto.html">Contacto</a>
+    <a href="blogs.html">Blogs</a>
+    <a href="carrito.html">Carrito</a>
+  </nav>
+  <h2>Detalle de la Compra</h2>
+  <div id="detalle-carrito-lista">
+    <!-- Detalle de productos y cantidades -->
+  </div>
+  <div id="detalle-carrito-total">
+    <!-- Total final -->
+  </div>
+  <form id="form-compra">
+    <h3>Confirmar Compra</h3>
+    <div class="form-group">
+      <label>Nombre:<input type="text" name="nombre" required></label>
+    </div>
+    <div class="form-group">
+      <label>Correo:<input type="email" name="correo" required></label>
+    </div>
+    <div class="form-group">
+      <label>Dirección:<input type="text" name="direccion" required></label>
+    </div>
+    <button class="btn" type="submit">Finalizar Compra</button>
+  </form>
+  <div id="mensaje-compra"></div>
+</body>
+</html>
