@@ -41,54 +41,24 @@
       <label>Código promocional:<input type="text" name="codigo"></label>
     </div>
     <div id="beneficios" style="margin-bottom:1em;color:#8B4513;font-weight:bold;"></div>
-    <button class="btn" type="submit">Registrarse</button>
-    <button class="btn" type="button" onclick="location.href='inicioSesion.html'">Ya tengo cuenta</button>
+  <button class="btn" type="submit">Registrarse</button>
+  <button class="btn" type="button" onclick="location.href='inicioSesion.html'">Ya tengo cuenta</button>
+  <button class="btn" type="button" id="ver-usuarios" style="background:#B0BEC5;color:#8B4513;margin-top:1em;">Ver usuarios registrados</button>
+    <div id="usuarios-registrados" style="margin-top:1em;"></div>
   </form>
   <script src="funciones.js"></script>
+  <script src="registro.js"></script>
   <script>
-    document.querySelector('form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const nombre = this.nombre.value.trim();
-      const correo = this.correo.value.trim();
-      const password = this.password.value;
-      const direccion = this.direccion.value.trim();
-      const fecha = this.fecha.value;
-      const codigo = this.codigo.value.trim();
-      // Calcular edad
-      const nacimiento = new Date(fecha);
-      const hoy = new Date();
-      let edad = hoy.getFullYear() - nacimiento.getFullYear();
-      if (hoy.getMonth() < nacimiento.getMonth() || (hoy.getMonth() === nacimiento.getMonth() && hoy.getDate() < nacimiento.getDate())) {
-        edad--;
+    document.getElementById('ver-usuarios').onclick = function() {
+      let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+      let html = '<h4>Usuarios registrados:</h4>';
+      if (!usuarios.length) {
+        html += '<p>No hay usuarios registrados.</p>';
+      } else {
+        html += '<ul>' + usuarios.map(u => `<li><b>${u.nombre}</b> - ${u.correo}</li>`).join('') + '</ul>';
       }
-      // Beneficios
-      let descuento50 = false;
-      let descuento10 = false;
-      let tortaGratis = false;
-      let beneficios = [];
-      if (edad >= 50) {
-        descuento50 = true;
-        beneficios.push('50% de descuento por edad');
-      }
-      if (codigo.toUpperCase() === 'FELICES50') {
-        descuento10 = true;
-        beneficios.push('10% de descuento por código FELICES50');
-      }
-      if (correo.endsWith('@duocuc.cl')) {
-        tortaGratis = true;
-        beneficios.push('Torta gratis el día de tu cumpleaños');
-      }
-      // Guardar usuario en localStorage
-      const usuario = {
-        nombre, correo, password, direccion, fecha, edad,
-        descuento50, descuento10, tortaGratis,
-        beneficios, pedidos: []
-      };
-      localStorage.setItem('usuario', JSON.stringify(usuario));
-      document.getElementById('beneficios').textContent = 'Beneficios activos: ' + (beneficios.length ? beneficios.join(', ') : 'Ninguno');
-      alert('¡Registro exitoso! Beneficios: ' + (beneficios.length ? beneficios.join(', ') : 'Ninguno'));
-      location.href = 'inicioSesion.html';
-    });
+      document.getElementById('usuarios-registrados').innerHTML = html;
+    };
   </script>
 </body>
 </html>

@@ -9,12 +9,19 @@ function cargarUsuario() {
 function agregarAlCarrito(producto) {
 	// Sincronizar carrito con localStorage antes de agregar
 	cargarCarrito();
-	// Si el producto ya está en el carrito, aumenta cantidad
-	const encontrado = carrito.find(p => p.codigo === producto.codigo);
-	if (encontrado) {
-		encontrado.cantidad += 1;
+	// Si el producto tiene mensaje personalizado, se agrega como producto único
+	if (producto.mensaje && producto.mensaje.trim() !== '') {
+		// Generar un código temporal único para el producto con mensaje
+		const tempCodigo = producto.codigo + '_msg_' + Date.now() + '_' + Math.floor(Math.random()*10000);
+		carrito.push({ ...producto, codigo: tempCodigo, cantidad: 1 });
 	} else {
-		carrito.push({ ...producto, cantidad: 1 });
+		// Si el producto ya está en el carrito, aumenta cantidad
+		const encontrado = carrito.find(p => p.codigo === producto.codigo && (!p.mensaje || p.mensaje === ''));
+		if (encontrado) {
+			encontrado.cantidad += 1;
+		} else {
+			carrito.push({ ...producto, cantidad: 1 });
+		}
 	}
 	guardarCarrito();
 }
@@ -68,6 +75,7 @@ function mostrarCarrito() {
 										<p style='font-family:Lato;color:#5D4037;'>Descuentos: ${descuentos.length ? descuentos.join(', ') : 'Ninguno'}</p>
 										<p style='font-family:Lato;color:#8B4513;'>Precio final: $${precioFinal}</p>
 										<p style='font-family:Lato;color:#5D4037;'>Cantidad: ${producto.cantidad}</p>
+										${producto.mensaje ? `<p style='font-family:Lato;color:#5D4037;'>Mensaje: ${producto.mensaje}</p>` : ''}
 										<button class='btn' onclick="eliminarDelCarrito('${producto.codigo}')">Eliminar</button>
 									</div>
 								</div>
@@ -125,7 +133,8 @@ function mostrarDetalleCarrito() {
 			  <span id='cantidad-${producto.codigo}'>${producto.cantidad}</span>
 			  <button class='btn' onclick="cambiarCantidadCarrito('${producto.codigo}', 1)">+</button>
 			</p>
-			<button class='btn' onclick="eliminarDelCarritoDetalle('${producto.codigo}')">Eliminar</button>
+		${producto.mensaje ? `<p>Mensaje: ${producto.mensaje}</p>` : ''}
+		<button class='btn' onclick="eliminarDelCarritoDetalle('${producto.codigo}')">Eliminar</button>
 		`;
 		lista.appendChild(div);
 		total += precioFinal * producto.cantidad;

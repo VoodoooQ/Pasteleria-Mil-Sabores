@@ -59,7 +59,7 @@
       <label>Nombre:<input type="text" name="nombre" required></label>
     </div>
     <div class="form-group">
-      <label>Correo:<input type="email" name="correo" required></label>
+      <label>Correo:<input type="email" name="correo" id="correo-compra" required readonly></label>
     </div>
     <div class="form-group">
       <label>Dirección:<input type="text" name="direccion" required></label>
@@ -182,5 +182,17 @@
       document.getElementById('mensaje-compra').innerHTML = '<h3>¡Compra realizada y pedido guardado!</h3><a href="seguimiento.html">Ver seguimiento de tu pedido</a>';
     });
   </script>
+  <script src="detalle_carrito.js"></script>
+</body>
+<script>
+  // Autocompletar correo del usuario activo y bloquear edición
+  window.addEventListener('DOMContentLoaded', function() {
+    var usuario = JSON.parse(localStorage.getItem('usuario'));
+    var correoInput = document.getElementById('correo-compra');
+    if (usuario && correoInput) {
+      correoInput.value = usuario.correo;
+    }
+  });
+</script>
 </body>
 </html>

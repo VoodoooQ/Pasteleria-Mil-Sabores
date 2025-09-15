@@ -1,0 +1,115 @@
+function eliminarDelCarritoDetalle(codigo) {
+  let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+  carrito = carrito.filter(p => p.codigo !== codigo);
+  localStorage.setItem('carrito', JSON.stringify(carrito));
+  if (window.mostrarDetalleCarrito) mostrarDetalleCarrito();
+}
+function cambiarCantidadCarrito(codigo, delta) {
+  let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+  const idx = carrito.findIndex(p => p.codigo === codigo);
+  if (idx !== -1) {
+    carrito[idx].cantidad += delta;
+    if (carrito[idx].cantidad < 1) carrito[idx].cantidad = 1;
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    if (window.mostrarDetalleCarrito) mostrarDetalleCarrito();
+  }
+}
+function compartirPedido(red) {
+  const tabla = document.querySelector('#boleta table');
+  let productos = '';
+  if (tabla) {
+    for (let i = 1; i < tabla.rows.length; i++) {
+      const celdas = tabla.rows[i].cells;
+      if (celdas.length >= 4) {
+        productos += `${celdas[0].textContent} x${celdas[1].textContent} ${celdas[2].textContent !== '-' ? '('+celdas[2].textContent+')' : ''} - ${celdas[3].textContent}\n`;
+      }
+    }
+  }
+  const total = document.querySelector('#boleta strong')?.textContent || '';
+  const mensaje = `¡Mira mi pedido en Pastelería Mil Sabores!\n${productos}${total}`;
+  let url = encodeURIComponent(window.location.href);
+  let shareText = encodeURIComponent(mensaje);
+  let link = '';
+  if (red === 'facebook') link = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${shareText}`;
+  if (red === 'whatsapp') link = `https://wa.me/?text=${shareText}%20${url}`;
+  if (red === 'twitter') link = `https://twitter.com/intent/tweet?text=${shareText}%20${url}`;
+  if (red === 'telegram') link = `https://t.me/share/url?url=${url}&text=${shareText}`;
+  window.open(link, '_blank');
+}
+document.getElementById('form-compra').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const nombre = this.nombre.value;
+  const correo = this.correo.value;
+  const direccion = this.direccion.value;
+  const fechaEntregaRaw = this.fechaEntrega.value;
+  // Formatear fecha de entrega preferida a dd/mm/yyyy
+  let fechaEntrega = '';
+  if (fechaEntregaRaw) {
+    const f = new Date(fechaEntregaRaw);
+    const dia = String(f.getDate()).padStart(2, '0');
+    const mes = String(f.getMonth() + 1).padStart(2, '0');
+    const anio = String(f.getFullYear());
+    fechaEntrega = `${dia}/${mes}/${anio}`;
+  }
+  const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
+  let total = 0;
+  let productosBoleta = '';
+  let tortaGratisAplicada = false;
+  carrito.forEach(producto => {
+    let precioFinal = producto.precio;
+    if (usuario) {
+      if (usuario.descuento50) precioFinal = Math.round(precioFinal * 0.5);
+      if (usuario.descuento10) precioFinal = Math.round(precioFinal * 0.9);
+    }
+    // Si es cumpleaños y tiene beneficio, aplicar torta gratis solo a la primera torta del carrito
+    const hoy = new Date();
+    const cumple = new Date(usuario?.fecha);
+    const esCumple = usuario && usuario.tortaGratis && hoy.getDate() === cumple.getDate() && hoy.getMonth() === cumple.getMonth();
+    if (esCumple && !tortaGratisAplicada && producto.nombre.toLowerCase().includes('torta')) {
+      productosBoleta += `<tr><td>${producto.nombre}</td><td>1</td><td>¡Gratis!</td><td>$0</td></tr>`;
+      if (producto.cantidad > 1) {
+        productosBoleta += `<tr><td>${producto.nombre}</td><td>${producto.cantidad-1}</td><td>${producto.mensaje||'-'}</td><td>$${precioFinal}</td></tr>`;
+        total += precioFinal * (producto.cantidad-1);
+      }
+      tortaGratisAplicada = true;
+    } else {
+      productosBoleta += `<tr><td>${producto.nombre}</td><td>${producto.cantidad}</td><td>${producto.mensaje||'-'}</td><td>$${precioFinal}</td></tr>`;
+      total += precioFinal * producto.cantidad;
+    }
+  });
+  let tortaGratisMsg = '';
+  if (usuario && usuario.tortaGratis) {
+    const hoy = new Date();
+    const cumple = new Date(usuario.fecha);
+    if (hoy.getDate() === cumple.getDate() && hoy.getMonth() === cumple.getMonth()) {
+      tortaGratisMsg = '<tr><td>Torta Cumpleaños</td><td>1</td><td>¡Gratis!</td><td>$0</td></tr>';
+    }
+  }
+  document.getElementById('boleta').innerHTML = `
+    <h3>Boleta / Factura</h3>
+    <table style="width:100%;border-collapse:collapse;">
+      <tr style="background:#FFC0CB;"><th>Producto</th><th>Cantidad</th><th>Mensaje</th><th>Precio</th></tr>
+      ${productosBoleta}
+      ${tortaGratisMsg}
+    </table>
+    <p><strong>Total: $${total}</strong></p>
+    <p><strong>Fecha de entrega:</strong> ${fechaEntrega}</p>
+  `;
+  // Guardar pedido en usuario
+  // Fecha de pedido en formato dd/mm/yyyy
+  const hoy = new Date();
+  const fechaPedido = `${String(hoy.getDate()).padStart(2, '0')}/${String(hoy.getMonth()+1).padStart(2, '0')}/${hoy.getFullYear()}`;
+  const pedido = {
+    fecha: fechaPedido,
+    productos: carrito,
+    total,
+    fechaEntrega,
+    estado: 'preparación'
+  };
+  usuario.pedidos = usuario.pedidos || [];
+  usuario.pedidos.push(pedido);
+  localStorage.setItem('usuario', JSON.stringify(usuario));
+  localStorage.setItem('carrito', JSON.stringify([]));
+  document.getElementById('mensaje-compra').innerHTML = '<h3>¡Compra realizada y pedido guardado!</h3><a href="seguimiento.html">Ver seguimiento de tu pedido</a>';
+});
