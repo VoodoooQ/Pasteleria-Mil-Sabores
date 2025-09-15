@@ -7,20 +7,24 @@
 </head>
 <body>
   <nav>
-     <a href="inicio.html">Inicio</a>
-     <a href="catalogo.html">Productos</a>
-     <a href="registro.html">Registro</a>
-     <a href="inicioSesion.html">Iniciar Sesión</a>
-     <a href="nosotros.html">Nosotros</a>
-     <a href="contacto.html">Contacto</a>
-     <a href="blogs.html">Blogs</a>
-     <a href="comunidad.html">Comunidad</a>
-     <a href="seguimiento.html">Seguimiento</a>
-     <a href="carrito.html">Carrito</a>
-     <a href="detalle_carrito.html">Detalle Compra</a>
+   <a href="inicio.html">Inicio</a>
+   <a href="catalogo.html">Productos</a>
+   <a href="registro.html">Registro</a>
+   <a href="inicioSesion.html">Iniciar Sesión</a>
+   <a href="perfil.html">Mi Perfil</a>
+   <a href="nosotros.html">Nosotros</a>
+   <a href="contacto.html">Contacto</a>
+   <a href="blogs.html">Blogs</a>
+   <a href="comunidad.html">Comunidad</a>
+   <a href="seguimiento.html">Seguimiento</a>
+   <a href="carrito.html">Carrito</a>
+   <a href="detalle_carrito.html">Detalle Compra</a>
   </nav>
   <h2>Catálogo de Productos</h2>
   <div style="margin-bottom:1em;">
+    <label>Buscar producto:
+      <input type="text" id="busqueda-texto" placeholder="Buscar por nombre o descripción" style="width:220px;margin-right:1em;">
+    </label>
     <label>Tipo:
       <select id="filtro-tipo">
         <option value="">Todos</option>
@@ -62,11 +66,15 @@
     function renderProductos() {
       const tipo = document.getElementById('filtro-tipo').value;
       const tamano = document.getElementById('filtro-tamano').value;
+      const texto = document.getElementById('busqueda-texto').value.trim().toLowerCase();
       const lista = document.getElementById('productos-lista');
       lista.innerHTML = '';
-      const filtrados = productos.filter(p =>
-        (!tipo || p.tipo === tipo) && (!tamano || p.tamano === tamano)
-      );
+      const filtrados = productos.filter(p => {
+        const coincideTexto = !texto || p.nombre.toLowerCase().includes(texto) || p.descripcion.toLowerCase().includes(texto);
+        const coincideTipo = !tipo || p.tipo === tipo;
+        const coincideTamano = !tamano || p.tamano === tamano;
+        return coincideTexto && coincideTipo && coincideTamano;
+      });
       for (let i = 0; i < filtrados.length; i += 3) {
         const fila = document.createElement('div');
         fila.style.display = 'flex';
@@ -97,9 +105,10 @@
         lista.appendChild(fila);
       }
     }
-    document.getElementById('filtro-tipo').addEventListener('change', renderProductos);
-    document.getElementById('filtro-tamano').addEventListener('change', renderProductos);
-    renderProductos();
+  document.getElementById('filtro-tipo').addEventListener('change', renderProductos);
+  document.getElementById('filtro-tamano').addEventListener('change', renderProductos);
+  document.getElementById('busqueda-texto').addEventListener('input', renderProductos);
+  renderProductos();
     // Guardar código seleccionado para detalle
     window.verDetalle = function(codigo) {
       localStorage.setItem('productoDetalle', codigo);

@@ -7,16 +7,17 @@
 </head>
 <body>
   <nav>
-    <a href="inicio.html">Inicio</a>
-    <a href="catalogo.html">Productos</a>
-    <a href="registro.html">Registro / Iniciar Sesión</a>
-    <a href="nosotros.html">Nosotros</a>
-    <a href="contacto.html">Contacto</a>
-    <a href="blogs.html">Blogs</a>
-    <a href="comunidad.html">Comunidad</a>
-    <a href="seguimiento.html">Seguimiento</a>
-    <a href="carrito.html">Carrito</a>
-    <a href="detalle_carrito.html">Detalle Compra</a>
+  <a href="inicio.html">Inicio</a>
+  <a href="catalogo.html">Productos</a>
+  <a href="registro.html">Registro / Iniciar Sesión</a>
+  <a href="perfil.html">Mi Perfil</a>
+  <a href="nosotros.html">Nosotros</a>
+  <a href="contacto.html">Contacto</a>
+  <a href="blogs.html">Blogs</a>
+  <a href="comunidad.html">Comunidad</a>
+  <a href="seguimiento.html">Seguimiento</a>
+  <a href="carrito.html">Carrito</a>
+  <a href="detalle_carrito.html">Detalle Compra</a>
   </nav>
   <div class="producto" id="detalle-producto"></div>
   <div style="margin-top:1em;">
@@ -76,15 +77,21 @@
       <div class="form-group">
         <label>Mensaje personalizado:<input type="text" id="mensaje-personalizado"></label>
       </div>
+      <div class="form-group">
+        <label>Cantidad:<input type="number" id="cantidad-producto" min="1" value="1" style="width:60px;"></label>
+      </div>
       <button class="btn" id="agregar-carrito">Agregar al Carrito</button>
     `;
     document.getElementById('agregar-carrito').onclick = function() {
       const mensaje = document.getElementById('mensaje-personalizado').value;
-      agregarAlCarrito({
-        ...producto,
-        mensaje: mensaje
-      });
-      alert('Producto agregado al carrito con mensaje personalizado.');
+      const cantidad = parseInt(document.getElementById('cantidad-producto').value) || 1;
+      for (let i = 0; i < cantidad; i++) {
+        agregarAlCarrito({
+          ...producto,
+          mensaje: mensaje
+        });
+      }
+      alert('Producto agregado al carrito' + (cantidad > 1 ? ` (${cantidad} unidades)` : '') + ' con mensaje personalizado.');
     };
   </script>
 </body>

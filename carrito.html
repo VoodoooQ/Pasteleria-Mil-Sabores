@@ -8,16 +8,17 @@
 </head>
 <body>
   <nav>
-     <a href="inicio.html">Inicio</a>
-     <a href="catalogo.html">Productos</a>
-     <a href="registro.html">Registro</a>
-     <a href="inicioSesion.html">Iniciar Sesión</a>
-     <a href="nosotros.html">Nosotros</a>
-     <a href="contacto.html">Contacto</a>
-     <a href="blogs.html">Blogs</a>
-     <a href="comunidad.html">Comunidad</a>
-     <a href="seguimiento.html">Seguimiento</a>
-     <a href="carrito.html">Carrito</a>
+   <a href="inicio.html">Inicio</a>
+   <a href="catalogo.html">Productos</a>
+   <a href="registro.html">Registro</a>
+   <a href="inicioSesion.html">Iniciar Sesión</a>
+   <a href="perfil.html">Mi Perfil</a>
+   <a href="nosotros.html">Nosotros</a>
+   <a href="contacto.html">Contacto</a>
+   <a href="blogs.html">Blogs</a>
+   <a href="comunidad.html">Comunidad</a>
+   <a href="seguimiento.html">Seguimiento</a>
+   <a href="carrito.html">Carrito</a>
   </nav>
   <h2>Carrito de Compras</h2>
   <div id="carrito-lista"></div>
@@ -82,17 +83,34 @@
           }
         }
         lista.innerHTML += `
-          <div class="producto">
-            <h3>${producto.nombre}</h3>
-            <p>Precio original: $${precioOriginal}</p>
-            <p>Descuentos: ${descuentos.length ? descuentos.join(', ') : 'Ninguno'}</p>
-            <p>Precio final: $${precioFinal}</p>
-            <p>Cantidad: ${producto.cantidad}</p>
-            <p>Tipo: ${producto.tipo || '-'}</p>
-            <p>Tamaño: ${producto.tamano || '-'}</p>
-            <p>Mensaje: ${producto.mensaje || '-'}</p>
-            <button class='btn' onclick='editarProducto(${i})'>Editar</button>
-            <button class='btn' onclick="eliminarDelCarrito('${producto.codigo}')">Eliminar</button>
+          <div class="producto" style="display:flex;align-items:center;gap:1em;background:#FFF5E1;border:2px solid #FFC0CB;margin-bottom:1em;padding:1em;border-radius:12px;">
+            <img src="${producto.img}" alt="${producto.nombre}" style="width:90px;height:90px;object-fit:cover;border-radius:8px;border:1px solid #B0BEC5;">
+            <div style="flex:1;">
+              <h3 style="font-family:Pacifico;color:#8B4513;">${producto.nombre}</h3>
+              <p style="font-family:Lato;color:#5D4037;">Precio original: $${precioOriginal}</p>
+              <p style="font-family:Lato;color:#5D4037;">Descuentos: ${descuentos.length ? descuentos.join(', ') : 'Ninguno'}</p>
+              <p style="font-family:Lato;color:#8B4513;">Precio final: $${precioFinal}</p>
+              <p style="font-family:Lato;color:#5D4037;">Cantidad: 
+                <button class='btn' style='padding:2px 8px;' onclick="cambiarCantidadCarrito('${producto.codigo}', -1)">-</button>
+                <span id='cantidad-${producto.codigo}'>${producto.cantidad}</span>
+                <button class='btn' style='padding:2px 8px;' onclick="cambiarCantidadCarrito('${producto.codigo}', 1)">+</button>
+              </p>
+    function cambiarCantidadCarrito(codigo, delta) {
+      let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      const idx = carrito.findIndex(p => p.codigo === codigo);
+      if (idx !== -1) {
+        carrito[idx].cantidad += delta;
+        if (carrito[idx].cantidad < 1) carrito[idx].cantidad = 1;
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+        mostrarCarritoEditable();
+      }
+    }
+              <p style="font-family:Lato;color:#5D4037;">Tipo: ${producto.tipo || '-'}</p>
+              <p style="font-family:Lato;color:#5D4037;">Tamaño: ${producto.tamano || '-'}</p>
+              <p style="font-family:Lato;color:#5D4037;">Mensaje: ${producto.mensaje || '-'}</p>
+              <button class='btn' onclick='editarProducto(${i})'>Editar</button>
+              <button class='btn' onclick="eliminarDelCarrito('${producto.codigo}')">Eliminar</button>
+            </div>
           </div>
         `;
         total += precioFinal * producto.cantidad;

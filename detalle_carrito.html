@@ -5,6 +5,32 @@
   <title>Detalle de Compra - Pastelería Mil Sabores</title>
   <link rel="stylesheet" href="estilos.css">
   <script src="funciones.js"></script>
+  <script>
+    function eliminarDelCarritoDetalle(codigo) {
+      let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      carrito = carrito.filter(p => p.codigo !== codigo);
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+      if (window.mostrarDetalleCarrito) mostrarDetalleCarrito();
+    }
+    function cambiarCantidadCarrito(codigo, delta) {
+      let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      const idx = carrito.findIndex(p => p.codigo === codigo);
+      if (idx !== -1) {
+        carrito[idx].cantidad += delta;
+        if (carrito[idx].cantidad < 1) carrito[idx].cantidad = 1;
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+        if (window.mostrarDetalleCarrito) mostrarDetalleCarrito();
+      }
+    }
+  </script>
+  <script>
+    function eliminarDelCarritoDetalle(codigo) {
+      let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      carrito = carrito.filter(p => p.codigo !== codigo);
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+      if (window.mostrarDetalleCarrito) mostrarDetalleCarrito();
+    }
+  </script>
 </head>
 <body>
   <nav>
@@ -12,6 +38,7 @@
   <a href="catalogo.html">Productos</a>
   <a href="registro.html">Registro</a>
   <a href="inicioSesion.html">Iniciar Sesión</a>
+  <a href="perfil.html">Mi Perfil</a>
   <a href="nosotros.html">Nosotros</a>
   <a href="contacto.html">Contacto</a>
   <a href="blogs.html">Blogs</a>
@@ -96,14 +123,28 @@
       const usuario = JSON.parse(localStorage.getItem('usuario'));
       let total = 0;
       let productosBoleta = '';
+      let tortaGratisAplicada = false;
       carrito.forEach(producto => {
         let precioFinal = producto.precio;
         if (usuario) {
           if (usuario.descuento50) precioFinal = Math.round(precioFinal * 0.5);
           if (usuario.descuento10) precioFinal = Math.round(precioFinal * 0.9);
         }
-        total += precioFinal * producto.cantidad;
-        productosBoleta += `<tr><td>${producto.nombre}</td><td>${producto.cantidad}</td><td>${producto.mensaje||'-'}</td><td>$${precioFinal}</td></tr>`;
+        // Si es cumpleaños y tiene beneficio, aplicar torta gratis solo a la primera torta del carrito
+        const hoy = new Date();
+        const cumple = new Date(usuario?.fecha);
+        const esCumple = usuario && usuario.tortaGratis && hoy.getDate() === cumple.getDate() && hoy.getMonth() === cumple.getMonth();
+        if (esCumple && !tortaGratisAplicada && producto.nombre.toLowerCase().includes('torta')) {
+          productosBoleta += `<tr><td>${producto.nombre}</td><td>1</td><td>¡Gratis!</td><td>$0</td></tr>`;
+          if (producto.cantidad > 1) {
+            productosBoleta += `<tr><td>${producto.nombre}</td><td>${producto.cantidad-1}</td><td>${producto.mensaje||'-'}</td><td>$${precioFinal}</td></tr>`;
+            total += precioFinal * (producto.cantidad-1);
+          }
+          tortaGratisAplicada = true;
+        } else {
+          productosBoleta += `<tr><td>${producto.nombre}</td><td>${producto.cantidad}</td><td>${producto.mensaje||'-'}</td><td>$${precioFinal}</td></tr>`;
+          total += precioFinal * producto.cantidad;
+        }
       });
       let tortaGratisMsg = '';
       if (usuario && usuario.tortaGratis) {

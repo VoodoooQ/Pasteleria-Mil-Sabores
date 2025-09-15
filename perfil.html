@@ -37,9 +37,17 @@
       <label>Contraseña:<input type="password" name="password" required></label>
     </div>
     <div id="beneficios" style="margin-bottom:1em;color:#8B4513;font-weight:bold;"></div>
-    <button class="btn" type="submit">Guardar Cambios</button>
+  <button class="btn" type="submit">Guardar Cambios</button>
+  <button class="btn" type="button" id="cerrar-sesion" style="margin-left:1em;background:#FFC0CB;color:#8B4513;">Cerrar Sesión</button>
   </form>
   <script src="funciones.js"></script>
+  <script>
+    document.getElementById('cerrar-sesion').onclick = function() {
+      localStorage.removeItem('usuario');
+      alert('Sesión cerrada correctamente.');
+      location.href = 'inicio.html';
+    };
+  </script>
   <script>
     // Cargar datos del usuario
     function mostrarPerfil() {
