@@ -17,6 +17,27 @@
   <a href="detalle_carrito.html">Detalle Compra</a>
   </nav>
   <div class="producto" id="detalle-producto"></div>
+  <div style="margin-top:1em;">
+    <span style="font-weight:bold;color:#8B4513;">Compartir este producto:</span><br>
+    <button class="btn" onclick="compartirProducto('facebook')">Facebook</button>
+    <button class="btn" onclick="compartirProducto('whatsapp')">WhatsApp</button>
+    <button class="btn" onclick="compartirProducto('twitter')">X/Twitter</button>
+    <button class="btn" onclick="compartirProducto('telegram')">Telegram</button>
+  </div>
+  <script>
+    function compartirProducto(red) {
+      const producto = document.querySelector('#detalle-producto h2').textContent;
+      const mensaje = '¡Mira este producto en Pastelería Mil Sabores! ' + producto;
+      let url = encodeURIComponent(window.location.href);
+      let shareText = encodeURIComponent(mensaje);
+      let link = '';
+      if (red === 'facebook') link = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${shareText}`;
+      if (red === 'whatsapp') link = `https://wa.me/?text=${shareText}%20${url}`;
+      if (red === 'twitter') link = `https://twitter.com/intent/tweet?text=${shareText}%20${url}`;
+      if (red === 'telegram') link = `https://t.me/share/url?url=${url}&text=${shareText}`;
+      window.open(link, '_blank');
+    }
+  </script>
   <script src="funciones.js"></script>
   <script>
     // Productos con propiedades tipo/tamaño (igual que en catalogo.html)

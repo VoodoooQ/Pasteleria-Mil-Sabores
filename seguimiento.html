@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Seguimiento de Pedido - Pastelería Mil Sabores</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <nav>
+    <a href="inicio.html">Inicio</a>
+    <a href="catalogo.html">Productos</a>
+    <a href="seguimiento.html">Seguimiento</a>
+    <a href="carrito.html">Carrito</a>
+    <a href="detalle_carrito.html">Detalle Compra</a>
+    <a href="blogs.html">Blogs</a>
+  </nav>
+  <h2>Seguimiento de Pedido</h2>
+  <div id="pedidos-lista"></div>
+  <script src="funciones.js"></script>
+  <script>
+    function mostrarPedidos() {
+      const usuario = JSON.parse(localStorage.getItem('usuario'));
+      const pedidos = usuario && usuario.pedidos ? usuario.pedidos : [];
+      const lista = document.getElementById('pedidos-lista');
+      lista.innerHTML = '';
+      if (!pedidos.length) {
+        lista.innerHTML = '<p>No tienes pedidos realizados.</p>';
+        return;
+      }
+      pedidos.forEach((pedido, i) => {
+        // Formatear fecha de entrega y fecha de pedido a dd/mm/yyyy si no lo están
+        let fechaEntrega = pedido.fechaEntrega || '-';
+        if (fechaEntrega && fechaEntrega.includes('-')) {
+          const f = new Date(fechaEntrega);
+          const dia = String(f.getDate()).padStart(2, '0');
+          const mes = String(f.getMonth() + 1).padStart(2, '0');
+          const anio = String(f.getFullYear());
+          fechaEntrega = `${dia}/${mes}/${anio}`;
+        }
+        let fechaPedido = pedido.fecha;
+        if (fechaPedido && fechaPedido.includes('-')) {
+          const f = new Date(fechaPedido);
+          const dia = String(f.getDate()).padStart(2, '0');
+          const mes = String(f.getMonth() + 1).padStart(2, '0');
+          const anio = String(f.getFullYear());
+          fechaPedido = `${dia}/${mes}/${anio}`;
+        }
+        lista.innerHTML += `
+          <div class="producto" style="border:2px solid #FFC0CB;">
+            <h3>Pedido #${i+1}</h3>
+            <p>Fecha: ${fechaPedido}</p>
+            <p>Estado: <span style="color:${pedido.estado==='entregado'?'green':pedido.estado==='enviado'?'orange':'#8B4513'};font-weight:bold;">${pedido.estado}</span></p>
+            <p>Fecha de entrega: ${fechaEntrega}</p>
+            <ul>
+              ${pedido.productos.map(p => `<li>${p.nombre} x${p.cantidad} (${p.mensaje||''})</li>`).join('')}
+            </ul>
+            <button class="btn" onclick="cambiarEstado(${i})">Avanzar Estado</button>
+          </div>
+        `;
+      });
+    }
+    function cambiarEstado(index) {
+      const usuario = JSON.parse(localStorage.getItem('usuario'));
+      const pedidos = usuario.pedidos;
+      const estados = ['preparación','enviado','entregado'];
+      let actual = estados.indexOf(pedidos[index].estado);
+      if (actual < estados.length-1) pedidos[index].estado = estados[actual+1];
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+      mostrarPedidos();
+    }
+    mostrarPedidos();
+  </script>
+</body>
+</html>
