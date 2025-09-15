@@ -1,11 +1,15 @@
 // Carrito de compras
+// ===================
+// Funciones principales para gestionar el carrito, usuario y descuentos
 let carrito = [];
 let usuario = null;
+// Cargar usuario desde localStorage
 function cargarUsuario() {
 	const guardado = localStorage.getItem('usuario');
 	usuario = guardado ? JSON.parse(guardado) : null;
 }
 
+// Agregar producto al carrito, considerando mensajes personalizados y descuentos
 function agregarAlCarrito(producto) {
 	// Sincronizar carrito con localStorage antes de agregar
 	cargarCarrito();
@@ -26,21 +30,25 @@ function agregarAlCarrito(producto) {
 	guardarCarrito();
 }
 
+// Eliminar producto del carrito por código
 function eliminarDelCarrito(codigo) {
 	carrito = carrito.filter(p => p.codigo !== codigo);
 	guardarCarrito();
 	mostrarCarrito();
 }
 
+// Guardar el carrito en localStorage
 function guardarCarrito() {
 	localStorage.setItem('carrito', JSON.stringify(carrito));
 }
 
+// Cargar el carrito desde localStorage
 function cargarCarrito() {
 	const guardado = localStorage.getItem('carrito');
 	carrito = guardado ? JSON.parse(guardado) : [];
 }
 
+// Mostrar el contenido del carrito en la página principal
 function mostrarCarrito() {
 	cargarCarrito();
 	const lista = document.getElementById('carrito-lista');
@@ -97,6 +105,7 @@ function mostrarCarrito() {
 		totalDiv.innerHTML = `<h3>Total: $${total}</h3>`;
 }
 
+// Mostrar el detalle del carrito en la página de compra
 function mostrarDetalleCarrito() {
 	cargarCarrito();
 	const lista = document.getElementById('detalle-carrito-lista');
@@ -150,6 +159,7 @@ function mostrarDetalleCarrito() {
 	totalDiv.innerHTML = `<h3>Total: $${total}</h3>${tortaGratisMsg}`;
 }
 
+// Inicialización de eventos al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
 	if (document.getElementById('carrito-lista')) {
 		mostrarCarrito();
@@ -171,5 +181,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Ejemplo de cómo agregar producto desde detalle_producto.html
+// Exponer función para agregar productos desde otras páginas
 window.agregarAlCarrito = agregarAlCarrito;
 // Puedes llamar a esta función desde el botón "Agregar al Carrito"

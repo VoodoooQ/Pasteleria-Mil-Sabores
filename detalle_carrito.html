@@ -33,7 +33,10 @@
   </script>
 </head>
 <body>
-  <nav>
+  <header>
+    <!-- Encabezado principal con menú de navegación -->
+    <nav>
+      <!-- Menú de navegación con hipervínculos a las páginas principales -->
   <a href="inicio.html">Inicio</a>
   <a href="catalogo.html">Productos</a>
   <a href="registro.html">Registro</a>
@@ -46,6 +49,11 @@
   <a href="seguimiento.html">Seguimiento</a>
   <a href="carrito.html">Carrito</a>
   </nav>
+  </header>
+  <main>
+    <!-- Contenido principal: detalle de compra y formulario -->
+  <section>
+    <!-- Sección de detalle de compra -->
   <h2>Detalle de la Compra</h2>
   <div id="detalle-carrito-lista">
     <!-- Detalle de productos y cantidades -->
@@ -54,19 +62,57 @@
     <!-- Total final -->
   </div>
   <form id="form-compra">
+      <!-- Formulario de compra con validación JS -->
     <h3>Confirmar Compra</h3>
     <div class="form-group">
       <label>Nombre:<input type="text" name="nombre" required></label>
+      <span class="error" id="error-nombre"></span>
     </div>
     <div class="form-group">
       <label>Correo:<input type="email" name="correo" id="correo-compra" required readonly></label>
+      <span class="error" id="error-correo"></span>
     </div>
     <div class="form-group">
       <label>Dirección:<input type="text" name="direccion" required></label>
+      <span class="error" id="error-direccion"></span>
     </div>
     <div class="form-group">
       <label>Fecha de entrega preferida:<input type="date" name="fechaEntrega" required></label>
+      <span class="error" id="error-fechaEntrega"></span>
     </div>
+<script>
+document.getElementById('form-compra').addEventListener('submit', function(e) {
+  document.querySelectorAll('.error').forEach(el => el.textContent = '');
+  let valido = true;
+  const nombre = this.nombre.value.trim();
+  const correo = this.correo.value.trim();
+  const direccion = this.direccion.value.trim();
+  const fechaEntrega = this.fechaEntrega.value;
+  if (!nombre) {
+    document.getElementById('error-nombre').textContent = 'El nombre es obligatorio.';
+    valido = false;
+  }
+  if (!correo) {
+    document.getElementById('error-correo').textContent = 'El correo es obligatorio.';
+    valido = false;
+  } else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(correo)) {
+    document.getElementById('error-correo').textContent = 'El correo no es válido.';
+    valido = false;
+  }
+  if (!direccion) {
+    document.getElementById('error-direccion').textContent = 'La dirección es obligatoria.';
+    valido = false;
+  }
+  if (!fechaEntrega) {
+    document.getElementById('error-fechaEntrega').textContent = 'La fecha de entrega es obligatoria.';
+    valido = false;
+  }
+  if (!valido) {
+    e.preventDefault();
+    return false;
+  }
+});
+</script>
     <button class="btn" type="submit">Finalizar Compra</button>
   </form>
   <div id="mensaje-compra"></div>
@@ -182,17 +228,29 @@
       document.getElementById('mensaje-compra').innerHTML = '<h3>¡Compra realizada y pedido guardado!</h3><a href="seguimiento.html">Ver seguimiento de tu pedido</a>';
     });
   </script>
+  </section>
+  </main>
+  <footer style="background:#FFF5E1;color:#8B4513;padding:2em;text-align:center;margin-top:2em;border-top:2px solid #FFC0CB;">
+    <!-- Pie de página con información de contacto y créditos académicos -->
+    <p>&copy; 2025 Pastelería Mil Sabores | <a href="mailto:contacto@milSabores.cl" style="color:#8B4513;text-decoration:underline;">contacto@milSabores.cl</a></p>
+    <p>
+      Redes sociales: 
+      <a href="https://instagram.com" target="_blank" style="color:#8B4513;text-decoration:underline;">Instagram</a> |
+      <a href="https://facebook.com" target="_blank" style="color:#8B4513;text-decoration:underline;">Facebook</a> |
+      <a href="https://twitter.com" target="_blank" style="color:#8B4513;text-decoration:underline;">Twitter</a>
+    </p>
+    <p>Proyecto académico - Duoc UC</p>
+  </footer>
   <script src="detalle_carrito.js"></script>
-</body>
-<script>
-  // Autocompletar correo del usuario activo y bloquear edición
-  window.addEventListener('DOMContentLoaded', function() {
-    var usuario = JSON.parse(localStorage.getItem('usuario'));
-    var correoInput = document.getElementById('correo-compra');
-    if (usuario && correoInput) {
-      correoInput.value = usuario.correo;
-    }
-  });
-</script>
+  <script>
+    // Autocompletar correo del usuario activo y bloquear edición
+    window.addEventListener('DOMContentLoaded', function() {
+      var usuario = JSON.parse(localStorage.getItem('usuario'));
+      var correoInput = document.getElementById('correo-compra');
+      if (usuario && correoInput) {
+        correoInput.value = usuario.correo;
+      }
+    });
+  </script>
 </body>
 </html>

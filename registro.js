@@ -1,3 +1,4 @@
+// Evento de envío del formulario de registro
 document.querySelector('form').addEventListener('submit', function(e) {
   e.preventDefault();
   const nombre = this.nombre.value.trim();
@@ -6,14 +7,14 @@ document.querySelector('form').addEventListener('submit', function(e) {
   const direccion = this.direccion.value.trim();
   const fecha = this.fecha.value;
   const codigo = this.codigo.value.trim();
-  // Calcular edad
+  // Calcular edad del usuario a partir de la fecha de nacimiento
   const nacimiento = new Date(fecha);
   const hoy = new Date();
   let edad = hoy.getFullYear() - nacimiento.getFullYear();
   if (hoy.getMonth() < nacimiento.getMonth() || (hoy.getMonth() === nacimiento.getMonth() && hoy.getDate() < nacimiento.getDate())) {
     edad--;
   }
-  // Beneficios
+  // Determinar beneficios según edad, código y correo institucional
   let descuento50 = false;
   let descuento10 = false;
   let tortaGratis = false;
@@ -30,7 +31,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
     tortaGratis = true;
     beneficios.push('Torta gratis el día de tu cumpleaños');
   }
-  // Guardar usuario en array de usuarios
+  // Guardar usuario en array de usuarios en localStorage
   let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
   if (usuarios.some(u => u.correo === correo)) {
     alert('Ya existe un usuario registrado con ese correo.');

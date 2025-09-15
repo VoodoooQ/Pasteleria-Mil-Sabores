@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Página de registro de usuario en Pastelería Mil Sabores -->
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -6,7 +7,10 @@
   <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-  <nav>
+  <header>
+    <!-- Encabezado principal con menú de navegación -->
+    <nav>
+      <!-- Menú de navegación con hipervínculos a las páginas principales -->
   <a href="inicio.html">Inicio</a>
   <a href="catalogo.html">Productos</a>
   <a href="registro.html">Registro</a>
@@ -20,45 +24,98 @@
   <a href="carrito.html">Carrito</a>
   <a href="detalle_carrito.html">Detalle Compra</a>
   </nav>
+  </header>
+  <main>
+    <!-- Contenido principal: formulario de registro -->
+  <section>
+    <!-- Sección de registro de usuario -->
   <h2>Registro</h2>
   <form>
+    <!-- Formulario de registro con validación JS -->
     <div class="form-group">
       <label>Nombre:<input type="text" name="nombre" required></label>
+      <span class="error" id="error-nombre"></span>
     </div>
     <div class="form-group">
       <label>Correo:<input type="email" name="correo" required></label>
+      <span class="error" id="error-correo"></span>
     </div>
     <div class="form-group">
       <label>Contraseña:<input type="password" name="password" required></label>
+      <span class="error" id="error-password"></span>
     </div>
     <div class="form-group">
       <label>Dirección:<input type="text" name="direccion" required></label>
+      <span class="error" id="error-direccion"></span>
     </div>
     <div class="form-group">
       <label>Fecha de nacimiento:<input type="date" name="fecha" required></label>
+      <span class="error" id="error-fecha"></span>
     </div>
     <div class="form-group">
       <label>Código promocional:<input type="text" name="codigo"></label>
+      <span class="error" id="error-codigo"></span>
     </div>
     <div id="beneficios" style="margin-bottom:1em;color:#8B4513;font-weight:bold;"></div>
-  <button class="btn" type="submit">Registrarse</button>
-  <button class="btn" type="button" onclick="location.href='inicioSesion.html'">Ya tengo cuenta</button>
-  <button class="btn" type="button" id="ver-usuarios" style="background:#B0BEC5;color:#8B4513;margin-top:1em;">Ver usuarios registrados</button>
-    <div id="usuarios-registrados" style="margin-top:1em;"></div>
+    <button class="btn" type="submit">Registrarse</button>
+    <button class="btn" type="button" onclick="location.href='inicioSesion.html'">Ya tengo cuenta</button>
   </form>
+  </section>
+  </main>
+  <footer style="background:#FFF5E1;color:#8B4513;padding:2em;text-align:center;margin-top:2em;border-top:2px solid #FFC0CB;">
+    <!-- Pie de página con información de contacto y créditos académicos -->
+    <p>&copy; 2025 Pastelería Mil Sabores | <a href="mailto:contacto@milSabores.cl" style="color:#8B4513;text-decoration:underline;">contacto@milSabores.cl</a></p>
+    <p>
+      Redes sociales: 
+      <a href="https://instagram.com" target="_blank" style="color:#8B4513;text-decoration:underline;">Instagram</a> |
+      <a href="https://facebook.com" target="_blank" style="color:#8B4513;text-decoration:underline;">Facebook</a> |
+      <a href="https://twitter.com" target="_blank" style="color:#8B4513;text-decoration:underline;">Twitter</a>
+    </p>
+    <p>Proyecto académico - Duoc UC</p>
+  </footer>
   <script src="funciones.js"></script>
   <script src="registro.js"></script>
-  <script>
-    document.getElementById('ver-usuarios').onclick = function() {
-      let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-      let html = '<h4>Usuarios registrados:</h4>';
-      if (!usuarios.length) {
-        html += '<p>No hay usuarios registrados.</p>';
-      } else {
-        html += '<ul>' + usuarios.map(u => `<li><b>${u.nombre}</b> - ${u.correo}</li>`).join('') + '</ul>';
-      }
-      document.getElementById('usuarios-registrados').innerHTML = html;
-    };
-  </script>
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+  // Limpiar errores previos
+  document.querySelectorAll('.error').forEach(el => el.textContent = '');
+  let valido = true;
+  const nombre = this.nombre.value.trim();
+  const correo = this.correo.value.trim();
+  const password = this.password.value;
+  const direccion = this.direccion.value.trim();
+  const fecha = this.fecha.value;
+  if (!nombre) {
+    document.getElementById('error-nombre').textContent = 'El nombre es obligatorio.';
+    valido = false;
+  }
+  if (!correo) {
+    document.getElementById('error-correo').textContent = 'El correo es obligatorio.';
+    valido = false;
+  } else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(correo)) {
+    document.getElementById('error-correo').textContent = 'El correo no es válido.';
+    valido = false;
+  }
+  if (!password) {
+    document.getElementById('error-password').textContent = 'La contraseña es obligatoria.';
+    valido = false;
+  } else if (password.length < 6) {
+    document.getElementById('error-password').textContent = 'La contraseña debe tener al menos 6 caracteres.';
+    valido = false;
+  }
+  if (!direccion) {
+    document.getElementById('error-direccion').textContent = 'La dirección es obligatoria.';
+    valido = false;
+  }
+  if (!fecha) {
+    document.getElementById('error-fecha').textContent = 'La fecha de nacimiento es obligatoria.';
+    valido = false;
+  }
+  if (!valido) {
+    e.preventDefault();
+    return false;
+  }
+});
+</script>
 </body>
 </html>

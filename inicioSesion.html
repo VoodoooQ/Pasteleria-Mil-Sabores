@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Página de inicio de sesión de usuario en Pastelería Mil Sabores -->
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -6,7 +7,10 @@
   <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-  <nav>
+  <header>
+    <!-- Encabezado principal con menú de navegación -->
+    <nav>
+      <!-- Menú de navegación con hipervínculos a las páginas principales -->
   <a href="inicio.html">Inicio</a>
   <a href="catalogo.html">Productos</a>
   <a href="registro.html">Registro</a>
@@ -20,17 +24,61 @@
   <a href="carrito.html">Carrito</a>
   <a href="detalle_carrito.html">Detalle Compra</a>
   </nav>
+  </header>
+  <main>
+    <!-- Contenido principal: formulario de inicio de sesión -->
+  <section>
+    <!-- Sección de inicio de sesión de usuario -->
   <h2>Iniciar Sesión</h2>
   <form>
+    <!-- Formulario de inicio de sesión con validación JS -->
     <div class="form-group">
       <label>Correo electrónico:<input type="email" name="correo" required></label>
+      <span class="error" id="error-correo"></span>
     </div>
     <div class="form-group">
       <label>Contraseña:<input type="password" name="password" required></label>
+      <span class="error" id="error-password"></span>
     </div>
     <button class="btn" type="submit">Entrar</button>
     <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
   </form>
+  </section>
+  </main>
+  <footer style="background:#FFF5E1;color:#8B4513;padding:2em;text-align:center;margin-top:2em;border-top:2px solid #FFC0CB;">
+    <!-- Pie de página con información de contacto y créditos académicos -->
+    <p>&copy; 2025 Pastelería Mil Sabores | <a href="mailto:contacto@milSabores.cl" style="color:#8B4513;text-decoration:underline;">contacto@milSabores.cl</a></p>
+    <p>
+      Redes sociales: 
+      <a href="https://instagram.com" target="_blank" style="color:#8B4513;text-decoration:underline;">Instagram</a> |
+      <a href="https://facebook.com" target="_blank" style="color:#8B4513;text-decoration:underline;">Facebook</a> |
+      <a href="https://twitter.com" target="_blank" style="color:#8B4513;text-decoration:underline;">Twitter</a>
+    </p>
+    <p>Proyecto académico - Duoc UC</p>
+  </footer>
   <script src="inicioSesion.js"></script>
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+  document.querySelectorAll('.error').forEach(el => el.textContent = '');
+  let valido = true;
+  const correo = this.correo.value.trim();
+  const password = this.password.value;
+  if (!correo) {
+    document.getElementById('error-correo').textContent = 'El correo es obligatorio.';
+    valido = false;
+  } else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(correo)) {
+    document.getElementById('error-correo').textContent = 'El correo no es válido.';
+    valido = false;
+  }
+  if (!password) {
+    document.getElementById('error-password').textContent = 'La contraseña es obligatoria.';
+    valido = false;
+  }
+  if (!valido) {
+    e.preventDefault();
+    return false;
+  }
+});
+</script>
 </body>
 </html>

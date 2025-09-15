@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Página principal de Pastelería Mil Sabores -->
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -6,11 +7,14 @@
   <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-  <nav>
+  <header>
+    <!-- Encabezado principal con menú de navegación -->
+    <nav>
+      <!-- Menú de navegación con hipervínculos a las páginas principales -->
   <a href="inicio.html">Inicio</a>
   <a href="catalogo.html">Productos</a>
   <a href="registro.html">Registro</a>
-  <a href="inicioSesion.html">Iniciar Sesión</a>
+  <a href="inicioSesion.html">In iciar Sesión</a>
   <a href="perfil.html">Mi Perfil</a>
   <a href="nosotros.html">Nosotros</a>
   <a href="contacto.html">Contacto</a>
@@ -20,12 +24,17 @@
   <a href="carrito.html">Carrito</a>
   <a href="detalle_carrito.html">Detalle Compra</a>
   </nav>
+  </header>
+  <main>
+    <!-- Contenido principal: banner, promociones, video institucional -->
   <div class="banner">
+    <!-- Banner de bienvenida con imagen destacada -->
     <h1>¡Bienvenido a Pastelería Mil Sabores!</h1>
     <p>Descubre nuestras promociones y celebra con nosotros.</p>
   <img src="elementos/img/bannerPasteleria.png" alt="Banner Pastelería" style="width:1920px;height:550px;display:block;margin:0 auto;border-radius:10px;object-fit:cover;">
   </div>
   <section>
+    <!-- Sección de promociones con productos destacados y botones de registro -->
     <h2>Promociones</h2>
   <div style="display: flex; gap: 2em; justify-content: center;">
       <div class="producto">
@@ -47,5 +56,16 @@ Regístrate y valida tu edad para activar tu descuento."</p>
       </div>
     </div>
   </section>
+    <article style="margin:2em auto;max-width:800px;text-align:center;">
+      <!-- Sección multimedia: video institucional -->
+      <h2>Video institucional</h2>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/1APwq1df6Mw" title="Video institucional Pastelería" frameborder="0" allowfullscreen style="border-radius:12px;"></iframe>
+    </article>
+  </main>
+  <footer style="background:#FFF5E1;color:#8B4513;padding:2em;text-align:center;margin-top:2em;border-top:2px solid #FFC0CB;">
+    <!-- Pie de página con información de contacto y créditos académicos -->
+    <p>&copy; 2025 Pastelería Mil Sabores | contacto@milSabores.cl | Instagram: @milSaboresPasteleria</p>
+    <p>Proyecto académico - Duoc UC</p>
+  </footer>
 </body>
 </html>

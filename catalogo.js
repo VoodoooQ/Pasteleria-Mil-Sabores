@@ -1,4 +1,6 @@
 // Ejemplo de productos con tipo y tamaño
+// ======================================
+// Array de productos disponibles en el catálogo
 const productos = [
   {codigo:'TC001',nombre:'Torta de Chocolate',precio:45000,tipo:'cuadrada',tamano:'grande',img:'elementos/img/tortachocolate.png',descripcion:'Deliciosa torta de chocolate con capas de ganache y un toque de avellanas. Personalizable con mensajes especiales.'},
   {codigo:'TC002',nombre:'Torta de Frutas',precio:50000,tipo:'cuadrada',tamano:'grande',img:'elementos/img/tortafrutas.png',descripcion:'Una mezcla de frutas frescas y crema chantilly sobre un suave bizcocho de vainilla, ideal para celebraciones.'},
@@ -17,6 +19,7 @@ const productos = [
   {codigo:'TCUM001',nombre:'Torta Especial de Cumpleaños',precio:55000,tipo:'circular',tamano:'grande',img:'elementos/img/torta_especial_de_cumpleanos.png',descripcion:'Diseñada especialmente para celebraciones, personalizable con decoraciones y mensajes únicos.'},
   {codigo:'TB001',nombre:'Torta Especial de Boda',precio:60000,tipo:'circular',tamano:'grande',img:'elementos/img/torta_especial_de_boda.png',descripcion:'Elegante y deliciosa, esta torta está diseñada para ser el centro de atención en cualquier boda.'}
 ];
+// Renderizar productos filtrados en el catálogo
 function renderProductos() {
   const tipo = document.getElementById('filtro-tipo').value;
   const tamano = document.getElementById('filtro-tamano').value;
@@ -59,11 +62,13 @@ function renderProductos() {
     lista.appendChild(fila);
   }
 }
+// Eventos para filtros y búsqueda
 document.getElementById('filtro-tipo').addEventListener('change', renderProductos);
 document.getElementById('filtro-tamano').addEventListener('change', renderProductos);
 document.getElementById('busqueda-texto').addEventListener('input', renderProductos);
 renderProductos();
 // Guardar código seleccionado para detalle
+// Guardar código seleccionado y redirigir a detalle de producto
 window.verDetalle = function(codigo) {
   localStorage.setItem('productoDetalle', codigo);
   location.href = 'detalle_producto.html';

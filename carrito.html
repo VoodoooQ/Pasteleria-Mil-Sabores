@@ -7,7 +7,10 @@
   <script src="funciones.js"></script>
 </head>
 <body>
-  <nav>
+  <header>
+    <!-- Encabezado principal con menú de navegación -->
+    <nav>
+      <!-- Menú de navegación con hipervínculos a las páginas principales -->
    <a href="inicio.html">Inicio</a>
    <a href="catalogo.html">Productos</a>
    <a href="registro.html">Registro</a>
@@ -20,6 +23,11 @@
    <a href="seguimiento.html">Seguimiento</a>
    <a href="carrito.html">Carrito</a>
   </nav>
+  </header>
+  <main>
+    <!-- Contenido principal: listado y acciones del carrito -->
+  <section>
+    <!-- Sección de carrito de compras -->
   <h2>Carrito de Compras</h2>
   <div id="carrito-lista"></div>
   <div id="carrito-total"></div>
@@ -31,6 +39,19 @@
     <button class="btn" onclick="compartirRed('twitter')">X/Twitter</button>
     <button class="btn" onclick="compartirRed('telegram')">Telegram</button>
   </div>
+  </section>
+  </main>
+  <footer style="background:#FFF5E1;color:#8B4513;padding:2em;text-align:center;margin-top:2em;border-top:2px solid #FFC0CB;">
+    <!-- Pie de página con información de contacto y créditos académicos -->
+    <p>&copy; 2025 Pastelería Mil Sabores | <a href="mailto:contacto@milSabores.cl" style="color:#8B4513;text-decoration:underline;">contacto@milSabores.cl</a></p>
+    <p>
+      Redes sociales: 
+      <a href="https://instagram.com" target="_blank" style="color:#8B4513;text-decoration:underline;">Instagram</a> |
+      <a href="https://facebook.com" target="_blank" style="color:#8B4513;text-decoration:underline;">Facebook</a> |
+      <a href="https://twitter.com" target="_blank" style="color:#8B4513;text-decoration:underline;">Twitter</a>
+    </p>
+    <p>Proyecto académico - Duoc UC</p>
+  </footer>
   <script src="funciones.js"></script>
   <script>
     <script src="carrito.js"></script>

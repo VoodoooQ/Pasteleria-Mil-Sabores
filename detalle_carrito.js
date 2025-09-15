@@ -1,9 +1,11 @@
+// Eliminar producto del carrito en la página de detalle de compra
 function eliminarDelCarritoDetalle(codigo) {
   let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
   carrito = carrito.filter(p => p.codigo !== codigo);
   localStorage.setItem('carrito', JSON.stringify(carrito));
   if (window.mostrarDetalleCarrito) mostrarDetalleCarrito();
 }
+// Cambiar la cantidad de un producto en el carrito
 function cambiarCantidadCarrito(codigo, delta) {
   let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
   const idx = carrito.findIndex(p => p.codigo === codigo);
@@ -14,6 +16,7 @@ function cambiarCantidadCarrito(codigo, delta) {
     if (window.mostrarDetalleCarrito) mostrarDetalleCarrito();
   }
 }
+// Compartir el pedido en redes sociales
 function compartirPedido(red) {
   const tabla = document.querySelector('#boleta table');
   let productos = '';
@@ -36,6 +39,7 @@ function compartirPedido(red) {
   if (red === 'telegram') link = `https://t.me/share/url?url=${url}&text=${shareText}`;
   window.open(link, '_blank');
 }
+// Evento de envío del formulario de compra
 document.getElementById('form-compra').addEventListener('submit', function(e) {
   e.preventDefault();
   const nombre = this.nombre.value;

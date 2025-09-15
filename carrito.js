@@ -1,3 +1,4 @@
+// Compartir el carrito en redes sociales
 function compartirRed(red) {
   const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
   let texto = '¡Mira mi pedido en Pastelería Mil Sabores!\n';
@@ -11,6 +12,7 @@ function compartirRed(red) {
   if (red === 'telegram') link = 'https://instagram.com';
   window.open(link, '_blank');
 }
+// Editar producto en el carrito (mensaje, tamaño, tipo)
 function editarProducto(index) {
   const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
   const producto = carrito[index];
@@ -24,6 +26,7 @@ function editarProducto(index) {
   localStorage.setItem('carrito', JSON.stringify(carrito));
   mostrarCarritoEditable();
 }
+// Mostrar el carrito editable en la página
 function mostrarCarritoEditable() {
   const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
   const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -78,6 +81,7 @@ function mostrarCarritoEditable() {
   }
   totalDiv.innerHTML = `<h3>Total: $${total}</h3>${tortaGratisMsg}`;
 }
+// Cambiar la cantidad de un producto en el carrito
 function cambiarCantidadCarrito(codigo, delta) {
   let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
   const idx = carrito.findIndex(p => p.codigo === codigo);
@@ -89,6 +93,7 @@ function cambiarCantidadCarrito(codigo, delta) {
   }
 }
 mostrarCarritoEditable();
+// Eliminar producto del carrito y actualizar vista
 window.eliminarDelCarrito = function(codigo) {
   let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
   carrito = carrito.filter(p => p.codigo !== codigo);
