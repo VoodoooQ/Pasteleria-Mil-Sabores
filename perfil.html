@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Perfil - Pastelería Mil Sabores</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <nav>
+    <a href="inicio.html">Inicio</a>
+    <a href="catalogo.html">Productos</a>
+    <a href="perfil.html">Mi Perfil</a>
+    <a href="carrito.html">Carrito</a>
+    <a href="detalle_carrito.html">Detalle Compra</a>
+    <a href="blogs.html">Blogs</a>
+  </nav>
+  <h2>Mi Perfil</h2>
+  <form id="perfil-form">
+    <div class="form-group">
+      <label>Nombre:<input type="text" name="nombre" required></label>
+    </div>
+    <div class="form-group">
+      <label>Correo:<input type="email" name="correo" required></label>
+    </div>
+    <div class="form-group">
+      <label>Dirección:<input type="text" name="direccion" required></label>
+    </div>
+    <div class="form-group">
+      <label>Fecha de nacimiento:<input type="date" name="fecha" required></label>
+    </div>
+    <div class="form-group">
+      <label>Código promocional:<input type="text" name="codigo"></label>
+    </div>
+    <div class="form-group">
+      <label>Contraseña:<input type="password" name="password" required></label>
+    </div>
+    <div id="beneficios" style="margin-bottom:1em;color:#8B4513;font-weight:bold;"></div>
+    <button class="btn" type="submit">Guardar Cambios</button>
+  </form>
+  <script src="funciones.js"></script>
+  <script>
+    // Cargar datos del usuario
+    function mostrarPerfil() {
+      const usuario = JSON.parse(localStorage.getItem('usuario'));
+      if (!usuario) return;
+      const form = document.getElementById('perfil-form');
+      form.nombre.value = usuario.nombre;
+      form.correo.value = usuario.correo;
+      form.direccion.value = usuario.direccion;
+      form.fecha.value = usuario.fecha;
+      form.codigo.value = usuario.codigo || '';
+      form.password.value = usuario.password;
+      document.getElementById('beneficios').textContent = 'Beneficios activos: ' + (usuario.beneficios && usuario.beneficios.length ? usuario.beneficios.join(', ') : 'Ninguno');
+    }
+    mostrarPerfil();
+    document.getElementById('perfil-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nombre = this.nombre.value.trim();
+      const correo = this.correo.value.trim();
+      const direccion = this.direccion.value.trim();
+      const fecha = this.fecha.value;
+      const codigo = this.codigo.value.trim();
+      const password = this.password.value;
+      // Calcular edad
+      const nacimiento = new Date(fecha);
+      const hoy = new Date();
+      let edad = hoy.getFullYear() - nacimiento.getFullYear();
+      if (hoy.getMonth() < nacimiento.getMonth() || (hoy.getMonth() === nacimiento.getMonth() && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+      }
+      // Beneficios
+      let descuento50 = false;
+      let descuento10 = false;
+      let tortaGratis = false;
+      let beneficios = [];
+      if (edad >= 50) {
+        descuento50 = true;
+        beneficios.push('50% de descuento por edad');
+      }
+      if (codigo.toUpperCase() === 'FELICES50') {
+        descuento10 = true;
+        beneficios.push('10% de descuento por código FELICES50');
+      }
+      if (correo.endsWith('@duocuc.cl')) {
+        tortaGratis = true;
+        beneficios.push('Torta gratis el día de tu cumpleaños');
+      }
+      // Guardar usuario actualizado
+      const usuario = {
+        nombre, correo, direccion, fecha, codigo, password, edad,
+        descuento50, descuento10, tortaGratis,
+        beneficios, pedidos: JSON.parse(localStorage.getItem('usuario')).pedidos || []
+      };
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+      document.getElementById('beneficios').textContent = 'Beneficios activos: ' + (beneficios.length ? beneficios.join(', ') : 'Ninguno');
+      alert('¡Perfil actualizado! Beneficios: ' + (beneficios.length ? beneficios.join(', ') : 'Ninguno'));
+    });
+  </script>
+</body>
+</html>

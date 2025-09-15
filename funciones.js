@@ -1,5 +1,10 @@
 // Carrito de compras
 let carrito = [];
+let usuario = null;
+function cargarUsuario() {
+	const guardado = localStorage.getItem('usuario');
+	usuario = guardado ? JSON.parse(guardado) : null;
+}
 
 function agregarAlCarrito(producto) {
 	// Si el producto ya está en el carrito, aumenta cantidad
@@ -34,19 +39,47 @@ function mostrarCarrito() {
 	if (!lista) return;
 	lista.innerHTML = '';
 	let total = 0;
-	carrito.forEach(producto => {
-		const div = document.createElement('div');
-		div.className = 'producto';
-		div.innerHTML = `
-			<h3>${producto.nombre}</h3>
-			<p>Precio: $${producto.precio}</p>
-			<p>Cantidad: ${producto.cantidad}</p>
-			<button class='btn' onclick="eliminarDelCarrito('${producto.codigo}')">Eliminar</button>
-		`;
-		lista.appendChild(div);
-		total += producto.precio * producto.cantidad;
-	});
-	totalDiv.innerHTML = `<h3>Total: $${total}</h3>`;
+		cargarUsuario();
+		carrito.forEach(producto => {
+			const div = document.createElement('div');
+			div.className = 'producto';
+			let precioOriginal = producto.precio;
+			let precioFinal = precioOriginal;
+			let descuentos = [];
+			// Aplicar descuentos según usuario
+			if (usuario) {
+				if (usuario.descuento50) {
+					precioFinal = Math.round(precioFinal * 0.5);
+					descuentos.push('50% por edad');
+				}
+				if (usuario.descuento10) {
+					precioFinal = Math.round(precioFinal * 0.9);
+					descuentos.push('10% por código FELICES50');
+				}
+			}
+			div.innerHTML = `
+				<h3>${producto.nombre}</h3>
+				<p>Precio original: $${precioOriginal}</p>
+				<p>Descuentos: ${descuentos.length ? descuentos.join(', ') : 'Ninguno'}</p>
+				<p>Precio final: $${precioFinal}</p>
+				<p>Cantidad: ${producto.cantidad}</p>
+				<button class='btn' onclick="eliminarDelCarrito('${producto.codigo}')">Eliminar</button>
+			`;
+			lista.appendChild(div);
+			total += precioFinal * producto.cantidad;
+		});
+		// Torta gratis por cumpleaños
+		let tortaGratisMsg = '';
+		if (usuario && usuario.tortaGratis) {
+			const hoy = new Date();
+			const cumple = new Date(usuario.fecha);
+			if (hoy.getDate() === cumple.getDate() && hoy.getMonth() === cumple.getMonth()) {
+				tortaGratisMsg = '<p style="color:#8B4513;font-weight:bold;">¡Torta gratis por tu cumpleaños!</p>';
+				totalDiv.innerHTML = `<h3>Total: $${total}</h3>${tortaGratisMsg}`;
+				return;
+			}
+		}
+		totalDiv.innerHTML = `<h3>Total: $${total}</h3>`;
 }
 
 function mostrarDetalleCarrito() {

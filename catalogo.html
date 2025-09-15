@@ -18,7 +18,85 @@
   <a href="detalle_carrito.html">Detalle Compra</a>
   </nav>
   <h2>Catálogo de Productos</h2>
-  <div class="producto-lista">
+  <div style="margin-bottom:1em;">
+    <label>Tipo:
+      <select id="filtro-tipo">
+        <option value="">Todos</option>
+        <option value="cuadrada">Cuadrada</option>
+        <option value="circular">Circular</option>
+      </select>
+    </label>
+    <label style="margin-left:1em;">Tamaño:
+      <select id="filtro-tamano">
+        <option value="">Todos</option>
+        <option value="pequena">Pequeña</option>
+        <option value="mediana">Mediana</option>
+        <option value="grande">Grande</option>
+      </select>
+    </label>
+  </div>
+  <div class="producto-lista" id="productos-lista"></div>
+  <script src="funciones.js"></script>
+  <script>
+    // Ejemplo de productos con tipo y tamaño
+    const productos = [
+      {
+        codigo: 'TC001', nombre: 'Torta de Chocolate', precio: 45000,
+        tipo: 'cuadrada', tamano: 'grande',
+        img: 'elementos/img/tortachocolate.png',
+        descripcion: 'Deliciosa torta de chocolate con capas de ganache y un toque de avellanas. Personalizable con mensajes especiales.'
+      },
+      {
+        codigo: 'TC002', nombre: 'Torta de Frutas', precio: 50000,
+        tipo: 'cuadrada', tamano: 'grande',
+        img: 'elementos/img/tortafrutas.png',
+        descripcion: 'Una mezcla de frutas frescas y crema chantilly sobre un suave bizcocho de vainilla, ideal para celebraciones.'
+      },
+      {
+        codigo: 'TT001', nombre: 'Torta Circular de Vainilla', precio: 40000,
+        tipo: 'circular', tamano: 'mediana',
+        img: 'elementos/img/tortaCircularVainilla.png',
+        descripcion: 'Bizcocho de vainilla clásico relleno con crema pastelera y cubierto con un glaseado dulce, perfecto para cualquier ocasión.'
+      },
+      {
+        codigo: 'TT002', nombre: 'Torta Circular de Manjar', precio: 42000,
+        tipo: 'circular', tamano: 'mediana',
+        img: 'elementos/img/tortaCircularDeManjar.png',
+        descripcion: 'Torta tradicional chilena con manjar y nueces, un deleite para los amantes de los sabores dulces y clásicos.'
+      },
+      // ...agrega el resto de productos con tipo/tamaño...
+    ];
+    function renderProductos() {
+      const tipo = document.getElementById('filtro-tipo').value;
+      const tamano = document.getElementById('filtro-tamano').value;
+      const lista = document.getElementById('productos-lista');
+      lista.innerHTML = '';
+      productos.filter(p =>
+        (!tipo || p.tipo === tipo) && (!tamano || p.tamano === tamano)
+      ).forEach(producto => {
+        const div = document.createElement('div');
+        div.className = 'producto';
+        div.innerHTML = `
+          <img src="${producto.img}" alt="${producto.nombre}" style="width:100%;">
+          <h3>${producto.nombre}</h3>
+          <p class="descripcion">${producto.descripcion}</p>
+          <p>Tipo: ${producto.tipo.charAt(0).toUpperCase() + producto.tipo.slice(1)}</p>
+          <p>Tamaño: ${producto.tamano.charAt(0).toUpperCase() + producto.tamano.slice(1)}</p>
+          <p>$${producto.precio}</p>
+          <button class="btn" onclick="verDetalle('${producto.codigo}')">Ver Detalle</button>
+        `;
+        lista.appendChild(div);
+      });
+    }
+    document.getElementById('filtro-tipo').addEventListener('change', renderProductos);
+    document.getElementById('filtro-tamano').addEventListener('change', renderProductos);
+    renderProductos();
+    // Guardar código seleccionado para detalle
+    window.verDetalle = function(codigo) {
+      localStorage.setItem('productoDetalle', codigo);
+      location.href = 'detalle_producto.html';
+    }
+  </script>
     <div class="producto">
       <img src="elementos/img/tortachocolate.png" alt="Torta Chocolate" style="width:100%;">
       <h3>Torta de Chocolate</h3>
